@@ -9,7 +9,7 @@ if {![info exists CFACV_BASEDIR]} {
   if {[info exists env(CFACV_BASEDIR)]} {
       set CFACV_BASEDIR $env(CFACV_BASEDIR)
   } else {
-      set CFACV_BASEDIR ${HOME}/cfacv
+      set CFACV_BASEDIR $env(HOME)/research/cfacv
   }
 }
 

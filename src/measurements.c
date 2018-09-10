@@ -41,6 +41,39 @@ double my_getbond ( double p0[3], double p1[3], double g0[3], double g1[3] ) {
   return d;
 
 }
+/* my_getrgyr:  accepts a 2-D array of {x y z} coordinates of centers, a 2-D array of {x y z}
+ * gradients, an integer with the number of centers, and a 1-D array of masses of centers
+ * and computes (i) the radius of gyration between centers, and (ii) the gradients of
+ * this distance with respect to each center.
+ * (c) 2018 Jasmine Gardner
+ */
+double my_getrgyr (double ** R, double ** g0, int n, double * m) {
+
+  double mtot=0.0, COMx=0.0, COMy=0.0, COMz=0.0, b=0.0, rg=0.0;
+  int i;
+
+  for (i=0; i<n; i++) {
+    COMx+=R[i][0]*m[i];
+    COMy+=R[i][1]*m[i];
+    COMz+=R[i][2]*m[i];
+    mtot+=m[i];
+  }
+  COMx/=(mtot);
+  COMy/=(mtot);
+  COMz/=(mtot);
+  for (i=0; i<n; i++) {
+      b+=m[i]*(pow((R[i][0]-COMx),2)+pow((R[i][1]-COMy),2)+pow((R[i][2]-COMz),2));
+  }
+  rg=sqrt(b/mtot);
+
+  for (i=0; i<n; i++) {
+    g0[i][0]=(m[i]/(rg*mtot))*(R[i][0]-COMx);
+    g0[i][1]=(m[i]/(rg*mtot))*(R[i][1]-COMy);
+    g0[i][2]=(m[i]/(rg*mtot))*(R[i][2]-COMz);
+  }
+  return rg;
+
+}
 /* my_getangle: accepts three 3-component vector cartesian positions
  * and computes (i) the angle about the second point in RADIANS and
  * (ii) the gradients of that angle with respect to each cartesian
