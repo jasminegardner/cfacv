@@ -38,14 +38,14 @@ if ( ! -f fmX.conf ) then
 endif
 setenv REGENERATE 1 # set to 1 if you want to force regeneration via MD
 setenv DIHED -dihed # set to 1 if CV's are dihedral angles on domain [-pi:pi]
-setenv CFACV_BASEDIR /home/cfa/research/cfacv
+setenv CFACV_BASEDIR /home/jasmine/research/cfacv
 setenv CHARMRUN /home/cfa/namd/NAMD_2.11_Source/Linux-x86_64-g++/charmrun 
-setenv NP 8  # number of processors to use for each MD simulation
+setenv NP 2  # number of processors to use for each MD simulation
 setenv CWD `pwd`
 setenv NCV `grep -v ^\# cv.inp | wc -l | awk '{print $1}'`
 setenv CVL `grep -v ^\# cv.inp | awk '{print $1}'`
 setenv NPOINTS `grep -v ^\# mesh.dat | wc -l | awk '{print $1}'`
-setenv NAMD2 /home/cfa/namd/NAMD_2.11_Source/Linux-x86_64-g++/namd2
+setenv NAMD2 /home/jasmine/namd/NAMD_2.11_Source/Linux-x86_64-g++/namd2
 cat > forces.dat << EOF
 # forces.dat
 # $CWD
@@ -70,7 +70,7 @@ foreach d (center*.coor)
     end
     mv tmp restrfm${n}.inp
     cat fmX.conf | sed s/%X%/$n/g > fm${n}.conf
-    ${CHARMRUN} -n $NP ${NAMD2} fm${n}.conf > fm${n}.log
+    namd2.11 +p${NP} fm${n}.conf > fm${n}.log
   endif
   ${CFACV_BASEDIR}/bin/ForcesFromLog -f fm${n}.log -dim $NCV -ofn fra${n}.dat $DIHED >> forces.dat
   @ m++

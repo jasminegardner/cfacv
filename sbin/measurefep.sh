@@ -20,14 +20,15 @@ namd_config_template=fepX.conf
 sm_history=output/0/alad_sm.job0.0.history
 STRING_METHOD_CONFIG=alad_stringmethod.conf
 
-CFACV_BASEDIR=/home/cfa/research/cfacv
-CHARMRUN=/home/cfa/namd/NAMD_2.11_Source/Linux-x86_64-g++/charmrun
-NAMD2=/home/cfa/namd/NAMD_2.11_Source/Linux-x86_64-g++/namd2
+CFACV_BASEDIR=/home/jasmine/research/cfacv
+CHARMRUN=/home/jasmine/namd/NAMD_2.11_Source/Linux-x86_64-g++/charmrun
+NAMD2=/home/jasmine/namd/NAMD_2.11_Source/Linux-x86_64-g++/namd2
 
 avg_last=1  # number of iterations to average over to generate anchor points
 NP=16  # number of processors to use for each MD simulation
 k=100.0  # spring constant in restrained MD used to measure mean forces
 DIHED="-dihed" # set to "-dihed" if CV's are dihedral angles
+DIHED=""
 
 while [[ $# -gt 1 ]]
 do
@@ -50,7 +51,7 @@ case $key in
     shift # past argument
     ;;
     -smh|--string_method_history)
-    string_method_history="$2"
+    sm_history="$2"
     shift # past argument
     ;;
     -nA|--avg_last)
@@ -177,7 +178,7 @@ for img in `seq 0 $NII`; do
   echo "[END]"
   echo "Created fep_${img}.conf and $rfn"
   echo "Running namd2..."
-  ${CHARMRUN} -n $NP ${NAMD2} fep_${img}.conf > fep_${img}.log
+  ${NAMD2} +p${NP} fep_${img}.conf > fep_${img}.log
   ${CFACV_BASEDIR}/bin/ForcesFromLog -k $k -f fep_${img}.log -dim $NCV -ofn fep_fra_${img}.dat $DIHED >> $image_forces_dat
 done
 

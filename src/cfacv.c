@@ -659,7 +659,7 @@ int DataSpace_ComputeCVs ( DataSpace * ds ) {
       }
       else if (cvi->typ==RGYR) {
 //	      cvi->val=1;
-	cvi->val=my_getrgyr(ds->R, cvi->gr, cvi->nC, ds->mc);
+	cvi->val=my_getrgyr(ds->R, cvi->gr, cvi->nC, ds->mc, cvi->ind);
       }
       else if (cvi->typ==CARTESIAN_X) {
 	cvi->val=ds->R[cvi->ind[0]][0];

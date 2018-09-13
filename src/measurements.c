@@ -47,29 +47,32 @@ double my_getbond ( double p0[3], double p1[3], double g0[3], double g1[3] ) {
  * this distance with respect to each center.
  * (c) 2018 Jasmine Gardner
  */
-double my_getrgyr (double ** R, double ** g0, int n, double * m) {
+double my_getrgyr (double ** R, double ** g0, int n, double * m, int * ind) {
 
   double mtot=0.0, COMx=0.0, COMy=0.0, COMz=0.0, b=0.0, rg=0.0;
-  int i;
+  int i, ind1;
 
   for (i=0; i<n; i++) {
-    COMx+=R[i][0]*m[i];
-    COMy+=R[i][1]*m[i];
-    COMz+=R[i][2]*m[i];
-    mtot+=m[i];
+    ind1=ind[i];
+    COMx+=R[ind1][0]*m[ind1];
+    COMy+=R[ind1][1]*m[ind1];
+    COMz+=R[ind1][2]*m[ind1];
+    mtot+=m[ind1];
   }
   COMx/=(mtot);
   COMy/=(mtot);
   COMz/=(mtot);
   for (i=0; i<n; i++) {
-      b+=m[i]*(pow((R[i][0]-COMx),2)+pow((R[i][1]-COMy),2)+pow((R[i][2]-COMz),2));
+      ind1=ind[i];
+      b+=m[ind1]*(pow((R[ind1][0]-COMx),2)+pow((R[ind1][1]-COMy),2)+pow((R[ind1][2]-COMz),2));
   }
   rg=sqrt(b/mtot);
 
   for (i=0; i<n; i++) {
-    g0[i][0]=(m[i]/(rg*mtot))*(R[i][0]-COMx);
-    g0[i][1]=(m[i]/(rg*mtot))*(R[i][1]-COMy);
-    g0[i][2]=(m[i]/(rg*mtot))*(R[i][2]-COMz);
+    ind1=ind[i];
+    g0[i][0]=(m[ind1]/(rg*mtot))*(R[ind1][0]-COMx);
+    g0[i][1]=(m[ind1]/(rg*mtot))*(R[ind1][1]-COMy);
+    g0[i][2]=(m[ind1]/(rg*mtot))*(R[ind1][2]-COMz);
   }
   return rg;
 
